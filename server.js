@@ -1,9 +1,6 @@
 var express = require("express");
 var mongoose = require("mongoose");
 
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
 var axios = require("axios");
 var cheerio = require("cheerio");
 
@@ -31,11 +28,11 @@ mongoose.connect(MONGODB_URI);
 
 // Routes
 
-// A GET route for scraping the echoJS website
+// A GET route for scraping the website
 app.get("/scrape", function (req, res) {
     //  grab the body of the html with axios
     axios.get("https://www.premierleague.com/news").then(function (response) {
-        // Then, we load that into cheerio and save it to $ for a shorthand selector
+
         var $ = cheerio.load(response.data);
 
         $("figcaption").each(function (i, element) {
@@ -72,7 +69,7 @@ app.get("/articles", function (req, res) {
     // Grab every document in the Articles collection
     db.Article.find({})
         .then(function (dbArticle) {
-            // If we were able to successfully find Articles, send them back to the client
+            // If able to successfully find Articles, send them back to the client
             res.json(dbArticle);
         })
         .catch(function (err) {
@@ -103,8 +100,6 @@ app.post("/articles/:id", function (req, res) {
     db.Comment.create(req.body)
         .then(function (dbcomment) {
             // If a comment was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new comment
-            // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
             return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment: dbcomment._id }, { new: true });
         })
         .then(function (dbArticle) {
