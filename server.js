@@ -12,8 +12,6 @@ var PORT = 3000;
 // Initialize Express
 var app = express();
 
-// Configure middleware
-
 
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
